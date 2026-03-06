@@ -10,9 +10,7 @@ Inspired by HFT order book implementations, I wanted to recreated a basic versio
   
 </div>
 
-
-
-
+<br/>
 
 ## List Operations and Features: 
 - Add to back O(1)
@@ -22,6 +20,18 @@ Inspired by HFT order book implementations, I wanted to recreated a basic versio
 In theory:
 Could support adding to front O(1)
 Could support adding to random O(1)
+
+<br/>
+
+## Key Optimizations:
+1) **Cache locality**. Preallocates enough buffer for up to 1 million nodes contiguously leveraging cache locality in cpu access.
+2) **Cache line buffering**. List node structs are designed to be 16 bytes, so each cache line fetches 4 structs 
+3) **Prefault pages**. Pages are prefaulted upon allocation, ensure even faster add time as we can avoid page faults and TLB misses
+4) **Linked list**. Actual list is implemented using memory contiguous free lists with next and prev. Supports O(1) random, front and back removal and access.
+5) **Boolean ID Array**. Uses an array of boolean fails, each array indexes uses pointer and memroy arithmetic to obtain the ith list node after the buffer start memory location
+6) **Free list**. Dynamically append remove nodes to a free vector, allows operations to reused memory as much as possible upon removing while keeping FIFO order.
+7) **Integer** rather than pointers. Squeezes even less bytes into a node struct.
+
 
 <br/>
 
@@ -51,15 +61,3 @@ Could support adding to random O(1)
 
 
 <br/>
-
-## Key Optimization Features:
-1) **Cache locality**. Preallocates enough buffer for up to 1 million nodes contiguously leveraging cache locality in cpu access.
-2) **Cache line buffering**. List node structs are designed to be 16 bytes, so each cache line fetches 4 structs 
-3) **Prefault pages**. Pages are prefaulted upon allocation, ensure even faster add time as we can avoid page faults and TLB misses
-4) **Linked list**. Actual list is implemented using memory contiguous free lists with next and prev. Supports O(1) random, front and back removal and access.
-5) **Boolean ID Array**. Uses an array of boolean fails, each array indexes uses pointer and memroy arithmetic to obtain the ith list node after the buffer start memory location
-6) **Free list**. Dynamically append remove nodes to a free vector, allows operations to reused memory as much as possible upon removing while keeping FIFO order.
-7) **Integer** rather than pointers. Squeezes even less bytes into a node struct. 
-
-
-
