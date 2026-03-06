@@ -1,14 +1,22 @@
 
 <div align="center">
 
-# Super Fast List
-
-Inspired by HFT order book implementations, I wanted to recreated a basic version of a container in c++ that supports super fast operations for adding and removal to test the concepts of use in those order books. This list supporst an average of up **41 million ops/s.**
+  # Super Fast List
   
-<img width="900" height="598" alt="Screenshot 2026-03-06 at 1 49 01 AM" src="https://github.com/user-attachments/assets/b0fb7cc0-1f85-4be4-a28e-9e74af1be0f3" />
-
-  
+  Inspired by HFT order book implementations, I wanted to recreated a basic version of a container in c++ that supports super fast operations for adding and removal to test the concepts of use in those order books. This list supporst an average of up **41 million ops/s.**
 </div>
+<br/>
+
+## Performance 
+<div align="center"> 
+  <img width="900" height="484" alt="Screenshot 2026-03-06 at 2 19 18 PM" src="https://github.com/user-attachments/assets/42b57a00-c81b-4fd3-a3c6-f25f10bd9965" />
+</div>
+<br/>
+
+As seen, the fast list outperforms std::list on every benchmark by a non-trivial factor.  <br>
+**Randomed mixed operations (first test)** is the probably most realistic test. Lack of branch prediction support likely slows down the operations. <br/>
+
+**However, fast list supports both random access and removal** while std::list doesnt  <br>
 
 <br/>
 
@@ -26,40 +34,34 @@ Could support adding to random O(1)
 ## Key Optimizations:
 1) **Cache locality**. Preallocates enough buffer for up to 1 million nodes contiguously leveraging cache locality in cpu access.
 2) **Cache line buffering**. List node structs are designed to be 16 bytes, so each cache line fetches 4 structs 
-3) **Prefault pages**. Pages are prefaulted upon allocation, ensure even faster add time as we can avoid page faults and TLB misses
+3) **Prefault pages**. Pages are prefaulted upon allocation, ensure even faster access time as we can leverage TLB.
 4) **Linked list**. Actual list is implemented using memory contiguous free lists with next and prev. Supports O(1) random, front and back removal and access.
-5) **Boolean ID Array**. Uses an array of boolean fails, each array indexes uses pointer and memroy arithmetic to obtain the ith list node after the buffer start memory location
-6) **Free list**. Dynamically append remove nodes to a free vector, allows operations to reused memory as much as possible upon removing while keeping FIFO order.
-7) **Integer** rather than pointers. Squeezes even less bytes into a node struct.
+5) **Boolean ID Array**. Uses an array of boolean fails, each array indexes uses pointer arithmetic on memory to obtain the ith list node after the buffer base. 
+6) **Free list**. Dynamically append remove nodes to a free vector, allows operations to reuse memory as much as possible while keeping FIFO order.
+7) **Integer** rather than pointers for next/prev. Squeezes even less bytes into a node struct.
 
 
 <br/>
 
-## Benchmarks
-
-
-### Number of operations / s
-
+## More Benchmark Metrics
+### Randomized — Number of operations / s
 | Operation | std::list | fast_list | Speedup |
 |-----------|----------:|----------:|--------:|
-| Add       | 34.9M     | 274.4M     | **7.8x** |
-| Remove    | 15.2M      | 84.0M     | **5.53x** |
-| Consume   | 17.2M     | 162.0M     | **9.42x** |
-| Mixed     | 18.4M      | 139.0M     | **7.55x** |
+| Add       | 57.7M     | 451.4M    | **7.82x** |
+| Remove    | 20.3M     | 238.7M    | **11.76x** |
+| Consume   | 29.9M     | 279.7M    | **9.35x** |
+| Mixed     | 34.3M     | 41.8M     | **1.22x** |
 
 > `std::list` does **not** support O(1) random access removal — requires O(n) walk to find order by ID.  
 > `fast_list` supports O(1) removal by `order_id` via `orderMap[]` direct lookup.
 
-### Time / operations 
-
-| Operation       | N       | Time     | ns/op |
-|-----------------|--------:|---------:|------:|
-| Add             | 1000000 | 3.64 ms | 4 ns |
-| Remove (every other) | 500000 | 5.95 ms | 12 ns |
-| Consume         | 500000  | 3.09 ms | 6 ns |
-| Mixed           | 1000000 | 7.18 ms | 7 ns |
-
-
+### Randomized — Time / operation (fast_list)
+| Operation            | N       | Time      | ns/op |
+|----------------------|--------:|----------:|------:|
+| Add                  | 1000000 | 2.22 ms   | 2 ns  |
+| Remove (every other) | 500000  | 2.09 ms   | 4 ns  |
+| Consume              | 500000  | 1.79 ms   | 4 ns  |
+| Mixed                | 1000000 | 23.92 ms  | 24 ns |
 <br/>
 
 
