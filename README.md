@@ -45,6 +45,11 @@ Could support adding to random O(1)
 <br/>
 
 ## More Benchmark Metrics
+
+Hardware - Apple M2 Pro, Sonoma 14.6.1, 16GB Ram
+
+<br/>
+
 ### Randomized — Number of operations / s
 | Operation | std::list | fast_list | Speedup |
 |-----------|----------:|----------:|--------:|
