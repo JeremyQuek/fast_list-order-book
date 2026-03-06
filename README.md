@@ -10,6 +10,11 @@
 ## Performance 
 <div align="center"> 
   <img width="900" height="484" alt="Screenshot 2026-03-06 at 2 19 18 PM" src="https://github.com/user-attachments/assets/42b57a00-c81b-4fd3-a3c6-f25f10bd9965" />
+  <br/>
+   <br/>
+  <p> Google Benchmark </p>
+  <br/>
+  <img width="800" height="226" alt="Screenshot 2026-03-06 at 3 30 09 PM" src="https://github.com/user-attachments/assets/7491babc-d75f-46a2-8ca4-0cbc380e8101" />
 </div>
 <br/>
 
@@ -18,6 +23,8 @@ As seen, the fast list outperforms std::list on every benchmark by a non-trivial
 hot path conditions.<br/>
 
 **However, fast list supports both random access and removal** while std::list doesnt  <br>
+
+
 
 <br/>
 
@@ -44,7 +51,7 @@ Could support adding to random O(1)
 
 <br/>
 
-## More Benchmark Metrics
+## Metric Analysis
 
 Hardware - Apple M2 Pro, Sonoma 14.6.1, 16GB Ram
 
