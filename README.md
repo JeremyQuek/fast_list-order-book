@@ -38,8 +38,8 @@ An array map is used, with indices as ids to prevent hash overhead: <br>
 <br/>
 <div align="center"> 
   Illustration of Fast List 
+  <img width="900" height="793" alt="Screenshot 2026-03-09 at 5 10 53 PM" src="https://github.com/user-attachments/assets/0a8b964b-66bd-4616-b247-66bd4eb6de08" />
 
-<img width="900" height="776" alt="Screenshot 2026-03-09 at 4 58 58 PM" src="https://github.com/user-attachments/assets/915d3097-ac76-4f2c-a5f6-878ac659b452" />
 </div>
 <br/>
 
