@@ -100,9 +100,7 @@ make
 ```
 
 This will compile benchmark.cpp along with fast_list.cpp, you can run `./benchmark ` to print out the results from the benchmakr.
-To run the google benchmark, you will need to compile it with the google library. 
 
-```
 
-```
+To run the google benchmark, you will need to compile it with std=c++17 and link the google benchmark libraries manually
 
